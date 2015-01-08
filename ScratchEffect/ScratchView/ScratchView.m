@@ -34,11 +34,13 @@
   CGContextSetLineWidth(self.clearPixels, 35.0);
   CGContextSetLineCap(self.clearPixels, kCGLineCapRound);
   
-  CGImageRef mask = CGImageMaskCreate(self.width, self.height,8 /*CGImageGetBitsPerComponent(self.scratchable)*/,8 /*CGImageGetBitsPerPixel(self.scratchable)*/, self.width, self.provider, nil, NO);
-  self.scratched = CGImageCreateWithMask(self.scratchable, mask);
+  CGImageRef mask = CGImageMaskCreate(self.width, self.height, 8, 8,/*CGImageGetBitsPerComponent(self.scratchable),CGImageGetBitsPerPixel(self.scratchable),*/ self.width, self.provider, nil, NO);
+  
+  self.scratched = mask;
+  /*self.scratched = CGImageCreateWithMask(self.scratchable, mask);
   
   CGImageRelease(mask);
-  CGColorSpaceRelease(colorSpace);
+  CGColorSpaceRelease(colorSpace);*/
 }
 
 - (void)drawRect:(CGRect)rect
@@ -53,6 +55,10 @@
   UITouch *touch = [[event touchesForView:self] anyObject];
   self.isFirstTouch = YES;
   self.currentLocation = [touch locationInView:self];
+  
+  NSLog(@"Touches Began");
+  NSLog(@"x = %f y = %f", [touch locationInView:self].x, [touch locationInView:self].y);
+  NSLog(@"color = %@", [self colorOfPoint:[touch locationInView:self]]);
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
@@ -79,6 +85,12 @@
     self.previousLocation = [touch previousLocationInView:self];
     [self writeLineFromPoint:self.previousLocation toPoint:self.currentLocation];
   }
+  
+  NSLog(@"Touches Ended");
+  NSLog(@"x = %f y = %f", [touch locationInView:self].x, [touch locationInView:self].y);
+  NSLog(@"color = %@", [self colorOfPoint:[touch locationInView:self]]);
+  
+  
 }
 
 #pragma mark - Private Methods
@@ -89,6 +101,22 @@
   CGContextAddLineToPoint(self.clearPixels, nextPoint.x, nextPoint.y);
   CGContextStrokePath(self.clearPixels);
   [self setNeedsDisplay];
+}
+
+- (UIColor*)colorOfPoint:(CGPoint)point
+{
+  UIColor *color;
+  
+  unsigned char pixel[4] = {0};
+  CGContextRef context = CGBitmapContextCreate(pixel, 1, 1, 8, 4, CGColorSpaceCreateDeviceRGB(), (CGBitmapInfo)kCGImageAlphaPremultipliedLast);
+  CGContextTranslateCTM(context, -point.x, -point.y);
+  
+  [self.layer renderInContext:context];
+  CGContextRelease(context);
+  
+  color = [UIColor colorWithRed:pixel[0]/255.f green:pixel[1]/255.f blue:pixel[2]/255.f alpha:pixel[3]/255.f];
+  
+  return color;
 }
 
 @end
