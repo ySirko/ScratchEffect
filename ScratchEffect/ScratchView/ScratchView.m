@@ -29,12 +29,12 @@
   
   CGContextSetFillColorWithColor(self.clearPixels, [UIColor blackColor].CGColor);
   CGContextFillRect(self.clearPixels, CGRectMake(self.bounds.origin.x, self.bounds.origin.y, self.frame.size.width, self.frame.size.height));
+
+  CGContextSetStrokeColorWithColor(self.clearPixels, /*[UIColor colorWithPatternImage:[UIImage imageNamed:@"background.jpg"]].CGColor);*/[UIColor whiteColor].CGColor);
+  CGContextSetLineWidth(self.clearPixels, 35.0);
+  CGContextSetLineCap(self.clearPixels, kCGLineCapRound);
   
-  CGContextSetStrokeColorWithColor(self.clearPixels, [UIColor whiteColor].CGColor);
-  CGContextSetLineWidth(self.clearPixels, 25.0);
-  CGContextSetLineCap(self.clearPixels, kCGLineCapButt);
-  
-  CGImageRef mask = CGImageMaskCreate(self.width, self.height, 8, 8, self.width, self.provider, nil, NO);
+  CGImageRef mask = CGImageMaskCreate(self.width, self.height,8 /*CGImageGetBitsPerComponent(self.scratchable)*/,8 /*CGImageGetBitsPerPixel(self.scratchable)*/, self.width, self.provider, nil, NO);
   self.scratched = CGImageCreateWithMask(self.scratchable, mask);
   
   CGImageRelease(mask);
