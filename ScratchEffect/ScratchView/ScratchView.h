@@ -27,4 +27,6 @@ IB_DESIGNABLE
 @property (assign, nonatomic) CGFloat width;
 @property (assign, nonatomic) CGFloat height;
 
+@property (assign, nonatomic) IBOutlet ScratchView *view;
+
 @end

@@ -27,25 +27,45 @@
   self.provider = CGDataProviderCreateWithCFData(pixels);
   self.clearPixels = CGBitmapContextCreate(CFDataGetMutableBytePtr(pixels), self.width, self.height, 8, self.width, colorSpace, (CGBitmapInfo)kCGImageAlphaNone);
   
-  CGContextSetFillColorWithColor(self.clearPixels, [UIColor blackColor].CGColor);
+  CGContextSetFillColorWithColor(self.clearPixels, /*[UIColor colorWithPatternImage:[UIImage imageNamed:@"whiteBlob.jpg"]].CGColor);*/[UIColor blackColor].CGColor);
   CGContextFillRect(self.clearPixels, CGRectMake(self.bounds.origin.x, self.bounds.origin.y, self.frame.size.width, self.frame.size.height));
 
-  CGContextSetStrokeColorWithColor(self.clearPixels, /*[UIColor colorWithPatternImage:[UIImage imageNamed:@"background.jpg"]].CGColor);*/[UIColor whiteColor].CGColor);
-  CGContextSetLineWidth(self.clearPixels, 35.0);
+  CGContextSetStrokeColorWithColor(self.clearPixels, /*[UIColor colorWithPatternImage:[UIImage imageNamed:@"whiteBlob.jpg"]].CGColor);*/[UIColor whiteColor].CGColor);
+  CGContextSetLineWidth(self.clearPixels, 25.f);
   CGContextSetLineCap(self.clearPixels, kCGLineCapRound);
   
   CGImageRef mask = CGImageMaskCreate(self.width, self.height, 8, 8,/*CGImageGetBitsPerComponent(self.scratchable),CGImageGetBitsPerPixel(self.scratchable),*/ self.width, self.provider, nil, NO);
   
-  self.scratched = mask;
-  /*self.scratched = CGImageCreateWithMask(self.scratchable, mask);
+  self.scratched = CGImageCreateWithMask(self.scratchable, mask);
   
   CGImageRelease(mask);
-  CGColorSpaceRelease(colorSpace);*/
+  CGColorSpaceRelease(colorSpace);
 }
 
 - (void)drawRect:(CGRect)rect
 {
   CGContextDrawImage(UIGraphicsGetCurrentContext(), [self bounds], self.scratched);
+  UIImage *texture = [UIImage imageNamed:@"whiteBlob.jpg"];
+  
+  CGPoint point = CGPointMake(self.currentLocation.x - CGImageGetWidth(texture.CGImage)/2, self.currentLocation.y - CGImageGetHeight(texture.CGImage)/2);
+  NSLog(@"Point = %@", NSStringFromCGPoint(point));
+  
+  [texture drawAtPoint:point blendMode:kCGBlendModeNormal alpha:1.f];
+  
+  /*dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    NSInteger count = 0;
+    
+    for (CGFloat i = 0.0; i < CGImageGetWidth(self.scratched); i++) {
+      for (CGFloat j = 0.0; j < CGImageGetHeight(self.scratched); j++) {
+        NSLog(@"i=%f j=%f", i, j);
+        CGPoint currentPoint = CGPointMake(i, j);
+        if (CGColorEqualToColor([self colorOfPoint:currentPoint].CGColor, [UIColor colorWithRed:0.f green:0.f blue:0.f alpha:1.f].CGColor)) {
+          count++;
+        };
+      }
+    }
+    NSLog(@"Count = %d", count);
+  });*/
 }
 
 #pragma mark - Touch Events
@@ -55,10 +75,6 @@
   UITouch *touch = [[event touchesForView:self] anyObject];
   self.isFirstTouch = YES;
   self.currentLocation = [touch locationInView:self];
-  
-  NSLog(@"Touches Began");
-  NSLog(@"x = %f y = %f", [touch locationInView:self].x, [touch locationInView:self].y);
-  NSLog(@"color = %@", [self colorOfPoint:[touch locationInView:self]]);
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
@@ -85,12 +101,6 @@
     self.previousLocation = [touch previousLocationInView:self];
     [self writeLineFromPoint:self.previousLocation toPoint:self.currentLocation];
   }
-  
-  NSLog(@"Touches Ended");
-  NSLog(@"x = %f y = %f", [touch locationInView:self].x, [touch locationInView:self].y);
-  NSLog(@"color = %@", [self colorOfPoint:[touch locationInView:self]]);
-  
-  
 }
 
 #pragma mark - Private Methods
@@ -98,17 +108,26 @@
 - (void)writeLineFromPoint:(CGPoint)currentPoint toPoint:(CGPoint)nextPoint
 {
   CGContextMoveToPoint(self.clearPixels, currentPoint.x, currentPoint.y);
+  //CGContextAddQuadCurveToPoint(self.clearPixels, currentPoint.x, currentPoint.y, nextPoint.x, nextPoint.y);
   CGContextAddLineToPoint(self.clearPixels, nextPoint.x, nextPoint.y);
   CGContextStrokePath(self.clearPixels);
   [self setNeedsDisplay];
+  
+  //NSLog(@"Line = %f", sqrt(pow(nextPoint.x - currentPoint.x, 2) + pow(nextPoint.y - currentPoint.y, 2)));
+  
 }
 
 - (UIColor*)colorOfPoint:(CGPoint)point
 {
   UIColor *color;
-  
+  size_t width = 1;
+  size_t height = 1;
+  size_t bitsPerComponent = 8;
+  size_t bytesPerRow = 4;
   unsigned char pixel[4] = {0};
-  CGContextRef context = CGBitmapContextCreate(pixel, 1, 1, 8, 4, CGColorSpaceCreateDeviceRGB(), (CGBitmapInfo)kCGImageAlphaPremultipliedLast);
+  CGContextRef context;
+  
+  context = CGBitmapContextCreate(pixel, width, height, bitsPerComponent, bytesPerRow, CGColorSpaceCreateDeviceRGB(), (CGBitmapInfo)kCGImageAlphaPremultipliedLast);
   CGContextTranslateCTM(context, -point.x, -point.y);
   
   [self.layer renderInContext:context];

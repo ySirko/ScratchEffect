@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		84223F281A5EC3BF00BFCE19 /* whiteBlob.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 84223F271A5EC3BF00BFCE19 /* whiteBlob.jpg */; };
 		8457CE331A42F4AB00E9221D /* Mr-Bean-mr--bean-166155_598_328.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8457CE311A42F4AB00E9221D /* Mr-Bean-mr--bean-166155_598_328.jpg */; };
 		8457CE341A42F4AB00E9221D /* website-background-2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8457CE321A42F4AB00E9221D /* website-background-2.jpg */; };
 		8491C0951A4310D200534ACE /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8491C0941A4310D200534ACE /* background.jpg */; };
@@ -33,6 +34,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		84223F271A5EC3BF00BFCE19 /* whiteBlob.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = whiteBlob.jpg; sourceTree = "<group>"; };
 		8457CE311A42F4AB00E9221D /* Mr-Bean-mr--bean-166155_598_328.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Mr-Bean-mr--bean-166155_598_328.jpg"; sourceTree = "<group>"; };
 		8457CE321A42F4AB00E9221D /* website-background-2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "website-background-2.jpg"; sourceTree = "<group>"; };
 		8491C0941A4310D200534ACE /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background.jpg; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 		8457CE301A42F48600E9221D /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				84223F271A5EC3BF00BFCE19 /* whiteBlob.jpg */,
 				8491C09C1A431A5000534ACE /* background2.png */,
 				8491C09D1A431A5000534ACE /* scratch2.jpg */,
 				8491C0961A43110600534ACE /* scratchable.jpg */,
@@ -90,8 +93,8 @@
 			isa = PBXGroup;
 			children = (
 				84B8D4281A42CD4E00211137 /* ScratchEffect */,
-				84B8D4421A42CD4E00211137 /* ScratchEffectTests */,
 				84B8D4271A42CD4E00211137 /* Products */,
+				84B8D4421A42CD4E00211137 /* ScratchEffectTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -136,7 +139,7 @@
 				84B8D4431A42CD4E00211137 /* Supporting Files */,
 			);
 			path = ScratchEffectTests;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		84B8D4431A42CD4E00211137 /* Supporting Files */ = {
 			isa = PBXGroup;
@@ -241,6 +244,7 @@
 				8491C0971A43110600534ACE /* scratchable.jpg in Resources */,
 				84B8D4371A42CD4E00211137 /* Images.xcassets in Resources */,
 				8491C09F1A431A5000534ACE /* scratch2.jpg in Resources */,
+				84223F281A5EC3BF00BFCE19 /* whiteBlob.jpg in Resources */,
 				8457CE341A42F4AB00E9221D /* website-background-2.jpg in Resources */,
 				8457CE331A42F4AB00E9221D /* Mr-Bean-mr--bean-166155_598_328.jpg in Resources */,
 			);
